@@ -12,6 +12,8 @@ services:
             - ${CURDIR:?CURDIR not set}/docker-compose/cassandra/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
 
     cassandra_node3:
+        labels:
+            chaos: "true"
         image: cassandra:3.11
         restart: always
         environment:
@@ -21,6 +23,8 @@ services:
             - ${CURDIR:?CURDIR not set}/docker-compose/cassandra/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
 
     cassandra_node2:
+        labels:
+            chaos: "true"
         image: cassandra:3.11
         restart: always
         environment:
