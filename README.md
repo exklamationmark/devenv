@@ -1,2 +1,9 @@
 # devenv
-Local dev environment with docker, golang, docker-compose, k8s
+
+Local dev environment with docker + docker-compose
+
+## have
+
+- cassandra
+- prometheus
+- chaos-monkey-esque termination of containers
