@@ -1,16 +1,21 @@
 version: "3"
 
 services:
+    cassandra_node1:
+        image: cassandra:3.11
+        restart: always
+        # ports:
+        #     - 9042:9042   # cassandra port
+        #     - 6666:6666   # jmx_exporter
+        volumes:
+            - ${CURDIR:?CURDIR not set}/docker-compose/cassandra/jmx_exporter/:/usr/share/cassandra/jmx_exporter:ro
+            - ${CURDIR:?CURDIR not set}/docker-compose/cassandra/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
+
     cassandra_node3:
         image: cassandra:3.11
         restart: always
-        # links:
-        #     - cassandra_node1
-        #     - cassandra_node2
         environment:
             CASSANDRA_SEEDS: cassandra_node1
-        # ports:
-        #     - 9044:9042
         volumes:
             - ${CURDIR:?CURDIR not set}/docker-compose/cassandra/jmx_exporter/:/usr/share/cassandra/jmx_exporter:ro
             - ${CURDIR:?CURDIR not set}/docker-compose/cassandra/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
@@ -18,26 +23,8 @@ services:
     cassandra_node2:
         image: cassandra:3.11
         restart: always
-        # links:
-        #     - cassandra_node1
-        #     - cassandra_node3
         environment:
             CASSANDRA_SEEDS: cassandra_node1
-        # ports:
-        #     - 9043:9042
-        volumes:
-            - ${CURDIR:?CURDIR not set}/docker-compose/cassandra/jmx_exporter/:/usr/share/cassandra/jmx_exporter:ro
-            - ${CURDIR:?CURDIR not set}/docker-compose/cassandra/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
-
-    cassandra_node1:
-        image: cassandra:3.11
-        restart: always
-        # links:
-        #     - cassandra_node3
-        #     - cassandra_node2
-        # ports:
-        #     - 9042:9042
-        #     - 6666:6666
         volumes:
             - ${CURDIR:?CURDIR not set}/docker-compose/cassandra/jmx_exporter/:/usr/share/cassandra/jmx_exporter:ro
             - ${CURDIR:?CURDIR not set}/docker-compose/cassandra/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
