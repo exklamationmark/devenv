@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+    vault.loco.dev:
+        image: vault:1.0.3
+        ports:
+            - 8200:8200
+        environment:
+            # server
+            VAULT_DEV_ROOT_TOKEN_ID: "vault_root_token"
+            VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
+
+    vault-cli.loco.dev:
+        image: vault:1.0.3
+        restart: "no"
+        environment:
+            VAULT_TOKEN: "vault_root_token"
+            VAULT_ADDR: "http://vault.loco.dev:8200"
+        entrypoint: |
+            /bin/sh -c "
+                while ! nc -z vault.loco.dev 8200
+                do
+                    echo \"waiting for vault server\"
+                    sleep 1
+                done
+                sleep 5
+
+                vault secrets enable pki
+                vault secrets tune -max-lease-ttl=8760h pki
+
+                vault write pki/root/generate/internal \\
+                    common_name=localenv.dev \\
+                    ttl=8760h
+
+                vault write pki/config/urls \\
+                    issuing_certificates=\"http://vault.loco.dev:8200/v1/pki/ca\" \\
+                    crl_distribution_points=\"http://vault.loco.dev:8200/v1/pki/crl\"
+
+                vault write pki/roles/loco-dot-dev \\
+                    allowed_domains=loco.dev \\
+                    allow_subdomains=true \\
+                    max_ttl=72h
+            "

@@ -3,6 +3,7 @@ all: local.infa
 
 local.infa:
 	CURDIR=${CURDIR} docker-compose -p devenv \
+		--file docker-compose/vault.yml \
 		--file docker-compose/chaos.yml \
 		--file docker-compose/cassandra.yml \
 		--file docker-compose/prometheus.yml \
@@ -11,6 +12,7 @@ PHONY: local.infa
 
 local.destroy:
 	CURDIR=${CURDIR} docker-compose -p devenv \
+		--file docker-compose/vault.yml \
 		--file docker-compose/chaos.yml \
 		--file docker-compose/cassandra.yml \
 		--file docker-compose/prometheus.yml \
