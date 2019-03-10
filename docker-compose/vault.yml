@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-    vault.loco.dev:
+    vault.locol.dev:
         image: vault:1.0.3
         ports:
             - 8200:8200
@@ -10,15 +10,15 @@ services:
             VAULT_DEV_ROOT_TOKEN_ID: "vault_root_token"
             VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
 
-    vault-cli.loco.dev:
+    vault-cli.locol.dev:
         image: vault:1.0.3
         restart: "no"
         environment:
             VAULT_TOKEN: "vault_root_token"
-            VAULT_ADDR: "http://vault.loco.dev:8200"
+            VAULT_ADDR: "http://vault.locol.dev:8200"
         entrypoint: |
             /bin/sh -c "
-                while ! nc -z vault.loco.dev 8200
+                while ! nc -z vault.locol.dev 8200
                 do
                     echo \"waiting for vault server\"
                     sleep 1
@@ -33,11 +33,11 @@ services:
                     ttl=8760h
 
                 vault write pki/config/urls \\
-                    issuing_certificates=\"http://vault.loco.dev:8200/v1/pki/ca\" \\
-                    crl_distribution_points=\"http://vault.loco.dev:8200/v1/pki/crl\"
+                    issuing_certificates=\"http://vault.locol.dev:8200/v1/pki/ca\" \\
+                    crl_distribution_points=\"http://vault.locol.dev:8200/v1/pki/crl\"
 
-                vault write pki/roles/loco-dot-dev \\
-                    allowed_domains=loco.dev \\
+                vault write pki/roles/locol-dot-dev \\
+                    allowed_domains=locol.dev \\
                     allow_subdomains=true \\
                     max_ttl=72h
             "

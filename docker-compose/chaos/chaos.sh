@@ -7,7 +7,7 @@ MIN_DUR=20
 MAX_DUR=120
 
 # interval between restarts, in seconds
-CHAOS_INTERVAL=60
+CHAOS_INTERVAL=180
 
 restart_one() {
 	local info="$(docker ps --filter "label=chaos=true" --format '{{.ID}} {{.Names}}' | grep -v chaos | shuf -n 1)"

@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  prometheus:
+  prometheus.locol.dev:
     image: prom/prometheus:v2.7.2
     ports:
     - 9091:9090

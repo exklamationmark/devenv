@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-    chaos:
+    chaos.locol.dev:
         image: docker:18.09
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
