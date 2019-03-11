@@ -19,3 +19,9 @@ local.destroy:
 		down --volumes
 	docker volume prune
 PHONY: local.destroy
+
+build.tools:
+	docker build --rm \
+		--tag=locol.dev/tools:latest \
+		dockerfiles/tools
+.PHONY: build.tools
