@@ -10,27 +10,55 @@ services:
         #     - 9042:9042   # cassandra port
         #     - 6666:6666   # jmx_exporter
         volumes:
-            - ${CURDIR:?CURDIR not set}/docker-compose/cassandra/jmx_exporter/:/usr/share/cassandra/jmx_exporter:ro
-            - ${CURDIR:?CURDIR not set}/docker-compose/cassandra/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
-
+            - ${CURDIR}/.secrets/vault.locol.dev:/etc/secrets/ca:ro
+            - ${CURDIR}/.secrets/cassandra-1.locol.dev:/etc/secrets/cassandra:ro
+            - ${CURDIR}/docker-compose/cassandra/jmx_exporter/:/usr/share/cassandra/jmx_exporter:ro
+            - ${CURDIR}/docker-compose/cassandra/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
+            - ${CURDIR}/docker-compose/cassandra/cassandra.yaml:/tmp/cassandra.yaml:ro
+        entrypoint: |
+            /bin/sh -c "
+                cp /tmp/cassandra.yaml /etc/cassandra/cassandra.yaml
+                docker-entrypoint.sh cassandra -f
+            "
     cassandra-2.locol.dev:
         labels:
             chaos: "true"
         image: cassandra:3.11
         restart: always
+        # ports:
+        #     - 9042:9042   # cassandra port
+        #     - 6666:6666   # jmx_exporter
         environment:
             CASSANDRA_SEEDS: cassandra-1.locol.dev
         volumes:
-            - ${CURDIR:?CURDIR not set}/docker-compose/cassandra/jmx_exporter/:/usr/share/cassandra/jmx_exporter:ro
-            - ${CURDIR:?CURDIR not set}/docker-compose/cassandra/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
-
+            - ${CURDIR}/.secrets/vault.locol.dev:/etc/secrets/ca:ro
+            - ${CURDIR}/.secrets/cassandra-2.locol.dev:/etc/secrets/cassandra:ro
+            - ${CURDIR}/docker-compose/cassandra/jmx_exporter/:/usr/share/cassandra/jmx_exporter:ro
+            - ${CURDIR}/docker-compose/cassandra/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
+            - ${CURDIR}/docker-compose/cassandra/cassandra.yaml:/tmp/cassandra.yaml:ro
+        entrypoint: |
+            /bin/sh -c "
+                cp /tmp/cassandra.yaml /etc/cassandra/cassandra.yaml
+                docker-entrypoint.sh cassandra -f
+            "
     cassandra-3.locol.dev:
         labels:
             chaos: "true"
         image: cassandra:3.11
         restart: always
+        # ports:
+        #     - 9042:9042   # cassandra port
+        #     - 6666:6666   # jmx_exporter
         environment:
             CASSANDRA_SEEDS: cassandra-1.locol.dev
         volumes:
-            - ${CURDIR:?CURDIR not set}/docker-compose/cassandra/jmx_exporter/:/usr/share/cassandra/jmx_exporter:ro
-            - ${CURDIR:?CURDIR not set}/docker-compose/cassandra/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
+            - ${CURDIR}/.secrets/vault.locol.dev:/etc/secrets/ca:ro
+            - ${CURDIR}/.secrets/cassandra-3.locol.dev:/etc/secrets/cassandra:ro
+            - ${CURDIR}/docker-compose/cassandra/jmx_exporter/:/usr/share/cassandra/jmx_exporter:ro
+            - ${CURDIR}/docker-compose/cassandra/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
+            - ${CURDIR}/docker-compose/cassandra/cassandra.yaml:/tmp/cassandra.yaml:ro
+        entrypoint: |
+            /bin/sh -c "
+                cp /tmp/cassandra.yaml /etc/cassandra/cassandra.yaml
+                docker-entrypoint.sh cassandra -f
+            "
