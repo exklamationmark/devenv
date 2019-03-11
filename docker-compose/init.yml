@@ -62,5 +62,9 @@ services:
                     /etc/secrets/ cassandra-3.locol.dev cassandrapassword
                 sh /var/run/scripts/pki/keystore_from_vault.sh \\
                     /etc/secrets/ cassandra-cli.locol.dev cassandrapassword
+
+                sh /var/run/scripts/pki/keystore_from_vault.sh \\
+                    /etc/secrets/ kafka-1.locol.dev kafkapassword
+
                 chown -R $UID:$GID /etc/secrets
             "
