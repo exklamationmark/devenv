@@ -1,0 +1,66 @@
+version: "3"
+
+services:
+    init.locol.dev:
+        image: locol.dev/tools:latest
+        restart: "no"
+        environment:
+            VAULT_TOKEN: "vault_root_token"
+            VAULT_ADDR: "http://vault.locol.dev:8200"
+            UID: ${UID}
+            GID: ${GID}
+        volumes:
+            - ${CURDIR}/.secrets:/etc/secrets
+        entrypoint: |
+            /bin/sh -c "
+                set -e
+
+                while ! nc -z vault.locol.dev 8200
+                do
+                    echo \"waiting for vault server\"
+                    sleep 1
+                done
+                sleep 5
+
+                vault secrets enable pki
+                vault secrets tune -max-lease-ttl=8760h pki
+
+                vault write pki/root/generate/internal \\
+                    common_name=locol.dev \\
+                    ttl=8760h \\
+                    --format=json > /tmp/bootstrap.json
+
+                rm -rf /etc/secrets/*
+                mkdir -p /etc/secrets/vault.locol.dev
+
+                jq -r '.data.certificate' \\
+                    < /tmp/bootstrap.json \\
+                    > /etc/secrets/vault.locol.dev/certificate.pem
+                jq -r '.data.issuing_ca' \\
+                    < /tmp/bootstrap.json \\
+                    > /etc/secrets/vault.locol.dev/ca-certificate.pem
+                jq -r '.data.private_key' \\
+                    < /tmp/bootstrap.json \\
+                    > /etc/secrets/vault.locol.dev/key.pem
+                sh /var/run/scripts/pki/truststore_from_tls_bundle.sh \\
+                    /etc/secrets vault.locol.dev capassword
+
+                vault write pki/config/urls \\
+                    issuing_certificates=\"http://vault.locol.dev:8200/v1/pki/ca\" \\
+                    crl_distribution_points=\"http://vault.locol.dev:8200/v1/pki/crl\"
+
+                vault write pki/roles/locol-dot-dev \\
+                    allowed_domains=locol.dev \\
+                    allow_subdomains=true \\
+                    max_ttl=72h
+
+                sh /var/run/scripts/pki/keystore_from_vault.sh \\
+                    /etc/secrets/ cassandra-1.locol.dev cassandrapassword
+                sh /var/run/scripts/pki/keystore_from_vault.sh \\
+                    /etc/secrets/ cassandra-2.locol.dev cassandrapassword
+                sh /var/run/scripts/pki/keystore_from_vault.sh \\
+                    /etc/secrets/ cassandra-3.locol.dev cassandrapassword
+                sh /var/run/scripts/pki/keystore_from_vault.sh \\
+                    /etc/secrets/ cassandra-cli.locol.dev cassandrapassword
+                chown -R $UID:$GID /etc/secrets
+            "

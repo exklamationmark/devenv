@@ -1,0 +1,12 @@
+[cql]
+version = 3.4.4
+
+[authentication]
+username = cassandra
+password = cassandra
+
+[ssl]
+validate = true
+certfile = $PWD/.secrets/vault.locol.dev/ca-certificate.pem
+userkey = $PWD/.secrets/cassandra-cli.locol.dev/key.pem
+usercert = $PWD/.secrets/cassandra-cli.locol.dev/certificate.pem

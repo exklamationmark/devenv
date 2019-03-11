@@ -5,5 +5,5 @@ services:
         image: docker:18.09
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-            - ${CURDIR:?CURDIR not set}/docker-compose/chaos/chaos.sh:/var/run/chaos.sh:ro
+            - ${CURDIR}/docker-compose/chaos/chaos.sh:/var/run/chaos.sh:ro
         entrypoint: /var/run/chaos.sh
