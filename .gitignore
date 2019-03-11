@@ -1,0 +1,4 @@
+# secrets (password, TLS bundle, etc)
+/.secrets
+# non-critical, but useful files
+/.misc
