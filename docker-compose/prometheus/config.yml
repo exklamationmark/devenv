@@ -21,6 +21,6 @@ scrape_configs:
           - targets: ['localhost:9090']
     - job_name: 'cassandra'
       dns_sd_configs:
-          - names: ['cassandra_node1', 'cassandra_node2', 'cassandra_node3']
+          - names: ['cassandra-1.locol.dev', 'cassandra-2.locol.dev', 'cassandra-3.locol.dev']
             type: 'A'
             port: 6666
