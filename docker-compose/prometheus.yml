@@ -1,9 +1,10 @@
 version: "3"
 
 services:
-  prometheus.locol.dev:
-    image: prom/prometheus:v2.7.2
-    ports:
-    - 9091:9090
-    volumes:
-    - ${CURDIR:?env var CURDIR not set/empty}/docker-compose/prometheus/config.yml:/etc/prometheus/prometheus.yml
+    prometheus.locol.dev:
+        image: prom/prometheus:v2.7.2
+        restart: always
+        # ports:
+        #     - 9091:9090
+        volumes:
+            - ${CURDIR}/docker-compose/prometheus/config.yml:/etc/prometheus/prometheus.yml
