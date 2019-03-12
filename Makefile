@@ -26,10 +26,10 @@ local.infra:
 		--file docker-compose/init.yml \
 		up --abort-on-container-exit init.locol.dev
 ifeq (${CHAOS},true)
-	echo "let's be chaotic"
+	echo "start chaotic monkey"
 	${PREFIX} docker-compose -p ${UUID} \
 		--file docker-compose/chaos.yml \
-		up &
+		up chaos.locol.dev > /dev/null 2>/dev/null &
 endif
 	${PREFIX} docker-compose -p ${UUID} \
 		--file docker-compose/cassandra.yml \

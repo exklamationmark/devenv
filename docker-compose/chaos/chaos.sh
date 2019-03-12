@@ -16,6 +16,7 @@ restart_one() {
 	local duration=$(shuf -i $MIN_DUR-$MAX_DUR -n 1)
 
 	echo "docker stop $name ($id)"
+	echo "Ta be, or not ta be, dat iz da question now!"
 	docker stop $id
 	echo "sleep $duration"
 	sleep $duration
@@ -23,9 +24,14 @@ restart_one() {
 	docker start $id
 }
 
-echo "Hello, chaos!"
+echo "imma chaotic mon-keigh-ork!"
+
+# establish some baseline for 5m+
+echo "need ta wait for 5m+ ta have a baseline"
+sleep 330
+
 while true
 do
-	sleep $CHAOS_INTERVAL
 	restart_one
+	sleep $CHAOS_INTERVAL
 done
