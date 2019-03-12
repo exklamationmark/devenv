@@ -33,12 +33,19 @@ ifeq (${CHAOS},true)
 endif
 	${PREFIX} docker-compose -p ${UUID} \
 		--file docker-compose/cassandra.yml \
+		--file docker-compose/kafka.yml \
 		--file docker-compose/prometheus.yml \
 		up \
 			cassandra-1.locol.dev \
 			cassandra-2.locol.dev \
 			cassandra-3.locol.dev \
-			prometheus.locol.dev
+			prometheus.locol.dev \
+			zookeeper-1.locol.dev \
+			zookeeper-2.locol.dev \
+			zookeeper-3.locol.dev \
+			kafka-1.locol.dev \
+			kafka-2.locol.dev \
+			kafka-3.locol.dev
 PHONY: local.infra
 
 
@@ -48,6 +55,7 @@ local.destroy:
 		--file docker-compose/init.yml \
 		--file docker-compose/vault.yml \
 		--file docker-compose/cassandra.yml \
+		--file docker-compose/kafka.yml \
 		--file docker-compose/prometheus.yml \
 		down --volumes
 PHONY: local.destroy
