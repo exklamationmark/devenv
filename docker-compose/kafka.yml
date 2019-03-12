@@ -1,25 +1,58 @@
 version: '3'
 
 services:
-    zookeeper:
+    zookeeper-1.locol.dev:
+        labels:
+            chaos: "true"
         image: confluentinc/cp-zookeeper:5.0.2
         environment:
             CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
+            ZOOKEEPER_SERVER_ID: 1
             ZOOKEEPER_CLIENT_PORT: 2181
             ZOOKEEPER_TICK_TIME: 2000
+            ZOOKEEPER_SERVERS: zookeeper-1.locol.dev:2888:3888;zookeeper-2.locol.dev:2888:3888;zookeeper-3.locol.dev:2888:3888
 
-    kafka:
+    zookeeper-2.locol.dev:
+        labels:
+            chaos: "true"
+        image: confluentinc/cp-zookeeper:5.0.2
+        environment:
+            CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
+            ZOOKEEPER_SERVER_ID: 2
+            ZOOKEEPER_CLIENT_PORT: 2181
+            ZOOKEEPER_TICK_TIME: 2000
+            ZOOKEEPER_SERVERS: zookeeper-1.locol.dev:2888:3888;zookeeper-2.locol.dev:2888:3888;zookeeper-3.locol.dev:2888:3888
+
+    zookeeper-3.locol.dev:
+        labels:
+            chaos: "true"
+        image: confluentinc/cp-zookeeper:5.0.2
+        environment:
+            CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
+            ZOOKEEPER_SERVER_ID: 3
+            ZOOKEEPER_CLIENT_PORT: 2181
+            ZOOKEEPER_TICK_TIME: 2000
+            ZOOKEEPER_SERVERS: zookeeper-1.locol.dev:2888:3888;zookeeper-2.locol.dev:2888:3888;zookeeper-3.locol.dev:2888:3888
+
+    kafka-1.locol.dev:
+        labels:
+            chaos: "true"
         image: confluentinc/cp-kafka:5.0.2
+        volumes:
+            - ${CURDIR}/.secrets/vault.locol.dev:/etc/kafka/secrets/ca:ro
+            - ${CURDIR}/.secrets/kafka-1.locol.dev:/etc/kafka/secrets/broker:ro
         depends_on:
-            - zookeeper
+            - zookeeper-1.locol.dev
+            - zookeeper-2.locol.dev
+            - zookeeper-3.locol.dev
         ports:
-            - 9092:9092
-            - 9093:9093
+            - 19092:19092
+            - 19093:19093
         environment:
             CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
             KAFKA_BROKER_ID: 1
-            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,SSL://kafka:9093
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper-1.locol.dev:2181,zookeeper-2.locol.dev:2181,zookeeper-3.locol.dev:2181
+            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1.locol.dev:19092,SSL://kafka-1.locol.dev:19093
             KAFKA_SSL_KEYSTORE_FILENAME: broker/keystore.jks
             KAFKA_SSL_KEYSTORE_CREDENTIALS: broker/keystore.password
             KAFKA_SSL_KEY_CREDENTIALS: broker/key.password
@@ -28,6 +61,59 @@ services:
             KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: " "
             KAFKA_SSL_CLIENT_AUTH: requested
             KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SSL
+
+    kafka-2.locol.dev:
+        labels:
+            chaos: "true"
+        image: confluentinc/cp-kafka:5.0.2
         volumes:
             - ${CURDIR}/.secrets/vault.locol.dev:/etc/kafka/secrets/ca:ro
-            - ${CURDIR}/.secrets/kafka-1.locol.dev:/etc/kafka/secrets/broker:ro
+            - ${CURDIR}/.secrets/kafka-2.locol.dev:/etc/kafka/secrets/broker:ro
+        depends_on:
+            - zookeeper-1.locol.dev
+            - zookeeper-2.locol.dev
+            - zookeeper-3.locol.dev
+        ports:
+            - 29092:29092
+            - 29093:29093
+        environment:
+            CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
+            KAFKA_BROKER_ID: 2
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper-1.locol.dev:2181,zookeeper-2.locol.dev:2181,zookeeper-3.locol.dev:2181
+            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2.locol.dev:29092,SSL://kafka-2.locol.dev:29093
+            KAFKA_SSL_KEYSTORE_FILENAME: broker/keystore.jks
+            KAFKA_SSL_KEYSTORE_CREDENTIALS: broker/keystore.password
+            KAFKA_SSL_KEY_CREDENTIALS: broker/key.password
+            KAFKA_SSL_TRUSTSTORE_FILENAME: ca/truststore.jks
+            KAFKA_SSL_TRUSTSTORE_CREDENTIALS: ca/truststore.password
+            KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: " "
+            KAFKA_SSL_CLIENT_AUTH: requested
+            KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SSL
+
+    kafka-3.locol.dev:
+        labels:
+            chaos: "true"
+        image: confluentinc/cp-kafka:5.0.2
+        volumes:
+            - ${CURDIR}/.secrets/vault.locol.dev:/etc/kafka/secrets/ca:ro
+            - ${CURDIR}/.secrets/kafka-3.locol.dev:/etc/kafka/secrets/broker:ro
+        depends_on:
+            - zookeeper-1.locol.dev
+            - zookeeper-2.locol.dev
+            - zookeeper-3.locol.dev
+        ports:
+            - 39092:39092
+            - 39093:39093
+        environment:
+            CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
+            KAFKA_BROKER_ID: 3
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper-1.locol.dev:2181,zookeeper-2.locol.dev:2181,zookeeper-3.locol.dev:2181
+            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-3.locol.dev:39092,SSL://kafka-3.locol.dev:39093
+            KAFKA_SSL_KEYSTORE_FILENAME: broker/keystore.jks
+            KAFKA_SSL_KEYSTORE_CREDENTIALS: broker/keystore.password
+            KAFKA_SSL_KEY_CREDENTIALS: broker/key.password
+            KAFKA_SSL_TRUSTSTORE_FILENAME: ca/truststore.jks
+            KAFKA_SSL_TRUSTSTORE_CREDENTIALS: ca/truststore.password
+            KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: " "
+            KAFKA_SSL_CLIENT_AUTH: requested
+            KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SSL
