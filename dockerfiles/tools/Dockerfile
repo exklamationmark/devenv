@@ -32,4 +32,7 @@ RUN vault --version
 RUN apt-get install -y \
 	netcat
 
+RUN apt-get install -y \
+	kafkacat
+
 ADD scripts /var/run/scripts
