@@ -1,0 +1,16 @@
+#!/bin/bash
+
+CONFIG=$1
+THE_REST=${@:2}
+
+_configs=$(cat $CONFIG)
+_cmd="kafkacat "
+for _config in $_configs
+do
+	_cmd+=" -X '$_config'"
+done
+_cmd+=" $THE_REST"
+
+echo $_cmd
+echo ""
+eval $_cmd

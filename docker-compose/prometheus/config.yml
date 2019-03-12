@@ -24,3 +24,13 @@ scrape_configs:
           - names: ['cassandra-1.locol.dev', 'cassandra-2.locol.dev', 'cassandra-3.locol.dev']
             type: 'A'
             port: 6666
+    - job_name: 'zookeeper'
+      dns_sd_configs:
+          - names: ['zookeeper-1.locol.dev', 'zookeeper-2.locol.dev', 'zookeeper-3.locol.dev']
+            type: 'A'
+            port: 6666
+    - job_name: 'kafka'
+      dns_sd_configs:
+          - names: ['kafka-1.locol.dev', 'kafka-2.locol.dev', 'kafka-3.locol.dev']
+            type: 'A'
+            port: 6666
