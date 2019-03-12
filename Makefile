@@ -40,8 +40,12 @@ endif
 			cassandra-2.locol.dev \
 			cassandra-3.locol.dev \
 			prometheus.locol.dev \
-			zookeeper \
-			kafka
+			zookeeper-1.locol.dev \
+			zookeeper-2.locol.dev \
+			zookeeper-3.locol.dev \
+			kafka-1.locol.dev \
+			kafka-2.locol.dev \
+			kafka-3.locol.dev
 PHONY: local.infra
 
 
