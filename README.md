@@ -6,5 +6,7 @@ Local dev environment with docker + docker-compose
 
 - vault
 - cassandra
+- kafka
+- elasticsearch
 - prometheus
 - chaos-monkey-esque termination of containers
