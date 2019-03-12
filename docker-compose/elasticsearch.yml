@@ -1,0 +1,70 @@
+version: "3"
+
+services:
+    # seed node
+    elasticsearch-1.locol.dev:
+        labels:
+            chaos: "true"
+        image: docker.elastic.co/elasticsearch/elasticsearch:6.6.1
+        restart: always
+        # ports:
+        #     - 9200:9200
+        environment:
+            ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+            cluster.name: "locol.dev"
+            bootstrap.memory_lock: "true"
+            discovery.zen.minimum_master_nodes: 2
+        # volumes:
+        #     - esdata1:/usr/share/elasticsearch/data
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+    # non-seed nodes
+    elasticsearch-2.locol.dev:
+        labels:
+            chaos: "true"
+        image: docker.elastic.co/elasticsearch/elasticsearch:6.6.1
+        restart: always
+        # ports:
+        #     - 9200:9200
+        environment:
+            ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+            cluster.name: "locol.dev"
+            bootstrap.memory_lock: "true"
+            discovery.zen.ping.unicast.hosts: "elasticsearch-1.locol.dev"
+            discovery.zen.minimum_master_nodes: 2
+        # volumes:
+        #     - esdata2:/usr/share/elasticsearch/data
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+    elasticsearch-3.locol.dev:
+        labels:
+            chaos: "true"
+        image: docker.elastic.co/elasticsearch/elasticsearch:6.6.1
+        restart: always
+        # ports:
+        #     - 9200:9200
+        environment:
+            ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+            cluster.name: "locol.dev"
+            bootstrap.memory_lock: "true"
+            discovery.zen.ping.unicast.hosts: "elasticsearch-1.locol.dev"
+            discovery.zen.minimum_master_nodes: 2
+        # volumes:
+        #     - esdata2:/usr/share/elasticsearch/data
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+    elasticsearch-exporter.locol.dev:
+        image: justwatch/elasticsearch_exporter:1.0.2
+        restart: always
+        entrypoint: |
+            /bin/elasticsearch_exporter
+                --web.listen-address=":6666"
+                --es.uri="http://elasticsearch-1.locol.dev:9200"
+                --es.all=true
+                --es.indices=true

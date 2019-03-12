@@ -26,14 +26,15 @@ local.infra:
 		--file docker-compose/init.yml \
 		up --abort-on-container-exit init.locol.dev
 ifeq (${CHAOS},true)
-	echo "let's be chaotic"
+	echo "start chaotic monkey"
 	${PREFIX} docker-compose -p ${UUID} \
 		--file docker-compose/chaos.yml \
-		up &
+		up chaos.locol.dev > /dev/null 2>/dev/null &
 endif
 	${PREFIX} docker-compose -p ${UUID} \
 		--file docker-compose/cassandra.yml \
 		--file docker-compose/kafka.yml \
+		--file docker-compose/elasticsearch.yml \
 		--file docker-compose/prometheus.yml \
 		up \
 			cassandra-1.locol.dev \
@@ -45,7 +46,11 @@ endif
 			zookeeper-3.locol.dev \
 			kafka-1.locol.dev \
 			kafka-2.locol.dev \
-			kafka-3.locol.dev
+			kafka-3.locol.dev \
+			elasticsearch-1.locol.dev \
+			elasticsearch-2.locol.dev \
+			elasticsearch-3.locol.dev \
+			elasticsearch-exporter.locol.dev
 PHONY: local.infra
 
 
@@ -56,6 +61,7 @@ local.destroy:
 		--file docker-compose/vault.yml \
 		--file docker-compose/cassandra.yml \
 		--file docker-compose/kafka.yml \
+		--file docker-compose/elasticsearch.yml \
 		--file docker-compose/prometheus.yml \
 		down --volumes
 PHONY: local.destroy

@@ -1,6 +1,7 @@
 version: "3"
 
 services:
+    # seed node
     cassandra-1.locol.dev:
         labels:
             chaos: "true"
@@ -20,6 +21,7 @@ services:
                 cp /tmp/cassandra.yaml /etc/cassandra/cassandra.yaml
                 docker-entrypoint.sh cassandra -f
             "
+    # non-seed nodes
     cassandra-2.locol.dev:
         labels:
             chaos: "true"
