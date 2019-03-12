@@ -1,5 +1,5 @@
 global:
-    scrape_interval:     15s
+    scrape_interval:     1m
     evaluation_interval: 5m
 
 # alerting:
@@ -32,5 +32,10 @@ scrape_configs:
     - job_name: 'kafka'
       dns_sd_configs:
           - names: ['kafka-1.locol.dev', 'kafka-2.locol.dev', 'kafka-3.locol.dev']
+            type: 'A'
+            port: 6666
+    - job_name: 'elasticsearch'
+      dns_sd_configs:
+          - names: ['elasticsearch-exporter.locol.dev']
             type: 'A'
             port: 6666
