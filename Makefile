@@ -20,7 +20,7 @@ local.infra: CHAOS:=
 local.infra:
 	${PREFIX} docker-compose -p ${UUID} \
 		--file docker-compose/vault.yml \
-		up vault.locol.dev &
+		up vault.locol.dev > /dev/null 2>/dev/null &
 	sleep 10
 	${PREFIX} docker-compose -p ${UUID} \
 		--file docker-compose/init.yml \
