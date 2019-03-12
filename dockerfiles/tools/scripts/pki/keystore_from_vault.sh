@@ -60,6 +60,9 @@ create_keystore() {
 		-deststorepass $PASSWORD
 
 	# keytool -list -keystore $FOLDER/$NAME/keystore.p12 -storepass $PASSWORD
+
+	echo -n "$PASSWORD" > $FOLDER/$NAME/keystore.password
+	echo -n "$PASSWORD" > $FOLDER/$NAME/key.password
 }
 
 # ----------------------------------------

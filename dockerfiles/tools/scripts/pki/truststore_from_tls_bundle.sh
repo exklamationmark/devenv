@@ -24,6 +24,8 @@ create_truststore() {
 
 	# keytool -list -keystore $FOLDER/$NAME/truststore.p12 -storepass $PASSWORD
 
+	echo -n "$PASSWORD" > $FOLDER/$NAME/truststore.password
+
 }
 
 # ----------------------------------------
