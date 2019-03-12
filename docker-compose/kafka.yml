@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+    zookeeper:
+        image: confluentinc/cp-zookeeper:5.0.2
+        environment:
+            CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
+            ZOOKEEPER_CLIENT_PORT: 2181
+            ZOOKEEPER_TICK_TIME: 2000
+
+    kafka:
+        image: confluentinc/cp-kafka:5.0.2
+        depends_on:
+            - zookeeper
+        ports:
+            - 9092:9092
+            - 9093:9093
+        environment:
+            CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
+            KAFKA_BROKER_ID: 1
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,SSL://kafka:9093
+            KAFKA_SSL_KEYSTORE_FILENAME: broker/keystore.jks
+            KAFKA_SSL_KEYSTORE_CREDENTIALS: broker/keystore.password
+            KAFKA_SSL_KEY_CREDENTIALS: broker/key.password
+            KAFKA_SSL_TRUSTSTORE_FILENAME: ca/truststore.jks
+            KAFKA_SSL_TRUSTSTORE_CREDENTIALS: ca/truststore.password
+            KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: " "
+            KAFKA_SSL_CLIENT_AUTH: requested
+            KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SSL
+        volumes:
+            - ${CURDIR}/.secrets/vault.locol.dev:/etc/kafka/secrets/ca:ro
+            - ${CURDIR}/.secrets/kafka-1.locol.dev:/etc/kafka/secrets/broker:ro

@@ -65,6 +65,12 @@ services:
 
                 sh /var/run/scripts/pki/keystore_from_vault.sh \\
                     /etc/secrets/ kafka-1.locol.dev kafkapassword
+                sh /var/run/scripts/pki/keystore_from_vault.sh \\
+                    /etc/secrets/ kafka-2.locol.dev kafkapassword
+                sh /var/run/scripts/pki/keystore_from_vault.sh \\
+                    /etc/secrets/ kafka-3.locol.dev kafkapassword
+                sh /var/run/scripts/pki/keystore_from_vault.sh \\
+                    /etc/secrets/ kafka-cli.locol.dev kafkapassword
 
                 chown -R $UID:$GID /etc/secrets
             "
